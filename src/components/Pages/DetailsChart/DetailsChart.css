@@ -1,0 +1,18 @@
+.recharts-yAxis {
+    transform: translate(30px, -20px);
+    color:#fff;
+}
+.recharts-cartesian-axis-line,.recharts-cartesian-axis-tick-line{
+    display: none;
+}
+.recharts-xAxis .recharts-cartesian-axis-tick:first-child{
+    display: none;
+}
+.recharts-cartesian-grid-horizontal line:last-child{
+    display: none;
+}
+.recharts-surface{
+    overflow: visible;
+}
+
+

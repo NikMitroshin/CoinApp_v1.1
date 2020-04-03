@@ -1,9 +1,11 @@
 import React from 'react';
 import Coin from './Coin.js';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 const CoinBtns = (props) => {
-    const dataPrice = Object.entries(props.dataPrice),
+    const dataPriceHook = useSelector( (state) => state.mainPriceReducer.dataPrice);
+
+    const dataPrice = Object.entries(dataPriceHook),
           names = ['Bitcoin', 'Ethereum', 'Ripple'], //тут имена (по идее с сервера)
           balance = [0.21234243, 2.3222343, 156.3424232], //тут кол-во (по идее с сервера)
           icons = [
@@ -26,8 +28,5 @@ const CoinBtns = (props) => {
     ));
 };
 
-const mapStateToProps = state => ({
-    dataPrice: state.mainPriceReducer.dataPrice, // получаю основной курс
-    dataPriceLoad: state.mainPriceReducer.isLoaded
-});
-export default connect(mapStateToProps, null)(CoinBtns);
+
+export default CoinBtns;

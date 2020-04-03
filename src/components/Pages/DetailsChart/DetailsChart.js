@@ -1,17 +1,21 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import { priceForChartData } from '../../../redux/actions/actions.js';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 import './DetailsChart.css';
 
 const DetailsChart =(props) => {
+    const dispatch = useDispatch();
 
     useEffect ( () => { 
         const requestUrl = `https://min-api.cryptocompare.com/data/v2/histo${props.infoChart.time}?fsym=${props.coinName[0]}&tsym=USD&limit=${props.infoChart.limit}`;
-        props.priceForChartData(requestUrl);
+        dispatch(priceForChartData(requestUrl));
     },[props.infoChart]);
 
-    if (props.priceForChartLoad) {
+    const priceForChartHook = useSelector( (state) => state.priceForChartReducer.priceForChart);
+    const priceForChartLoad  = useSelector( (state) => state.priceForChartReducer.isLoaded);
+
+    if (priceForChartLoad) {
         const addZeroToData = (num) => {
             if (num <= 9) num = '0' + num;
             return num; 
@@ -32,7 +36,7 @@ const DetailsChart =(props) => {
         };
         // дальше определяю максимальное значение цены за промежуток, выбираю подходящие интервалы
         let maxPrice=0;
-        const newdata = [...props.priceForChart];
+        const newdata = [...priceForChartHook];
         newdata.map( (item,index) =>{
             newdata[index].time = timeConverter(item.time); 
             newdata[index].close = item.close; 
@@ -109,12 +113,5 @@ const DetailsChart =(props) => {
     }  else {return ( <h2>PLEASE, WAIT</h2> )}; 
 };
 
-const mapStateToProps = state => ({
-    priceForChart: state.priceForChartReducer.priceForChart, // получаю основной курс
-    priceForChartLoad: state.priceForChartReducer.isLoaded // получаю основной курс
-});
-const mapDispatchToProps = dispatch => ({
-    priceForChartData: url => dispatch(priceForChartData(url))
-});  
-export default connect(mapStateToProps, mapDispatchToProps)(DetailsChart);
+export default DetailsChart;
 

@@ -1,9 +1,13 @@
 import React from 'react';
 import CoinBtns from './Coins/CoinBtns.js';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import './Main.css';
 
 const Main = (props) => {
+
+    const dataPriceHook = useSelector( (state) => state.mainPriceReducer.dataPrice);
+    const dataPriceLoad = useSelector( (state) => state.mainPriceReducer.isLoaded);
+
     const showTotalChange = () => {
         if (props.totalChangeUSD > 0) {
             return (
@@ -16,13 +20,13 @@ const Main = (props) => {
         };
     };
     
-    if (props.dataPriceLoad){
+    if (dataPriceLoad){
         const BTCBalance = 0.2432432,
               ETHBalance = 2.3242432,
               XRPBalance = 142.2432432,
-              BTCCost = 1 / props.dataPrice.BTC,
-              ETHCost = 1 / props.dataPrice.ETH,
-              XRPCost = 1 / props.dataPrice.XRP,
+              BTCCost = 1 / dataPriceHook.BTC,
+              ETHCost = 1 / dataPriceHook.ETH,
+              XRPCost = 1 / dataPriceHook.XRP,
               BTCBalanceUSD = BTCBalance * BTCCost,
               ETHBalanceUSD = ETHBalance * ETHCost,
               XRPBalanceUSD = XRPBalance * XRPCost,
@@ -51,8 +55,4 @@ const Main = (props) => {
     } else { return ( <h2 className="warning">Please, wait</h2>) };
 };
 
-const mapStateToProps = state => ({
-    dataPrice: state.mainPriceReducer.dataPrice, 
-    dataPriceLoad: state.mainPriceReducer.isLoaded
-});
-export default connect(mapStateToProps, null)(Main);
+export default Main;
